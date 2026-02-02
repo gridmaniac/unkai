@@ -6,20 +6,20 @@
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
-    ></path>
+    />
     <path
       d="M12 2.5C7.77027 2.5 5.6554 2.5 4.25276 3.69797C4.05358 3.86808 3.86808 4.05358 3.69797 4.25276C2.5 5.6554 2.5 7.77027 2.5 12C2.5 16.2297 2.5 18.3446 3.69797 19.7472C3.86808 19.9464 4.05358 20.1319 4.25276 20.302C5.6554 21.5 7.77027 21.5 12 21.5C16.2297 21.5 18.3446 21.5 19.7472 20.302C19.9464 20.1319 20.1319 19.9464 20.302 19.7472C21.5 18.3446 21.5 16.2297 21.5 12"
       stroke="currentColor"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
-    ></path>
+    />
     <path
       d="M15.5 5.5C16.0898 4.89316 17.6597 2.5 18.5 2.5C19.3403 2.5 20.9102 4.89316 21.5 5.5M18.5 3V9.5"
       stroke="currentColor"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
-    ></path>
+    />
   </svg>
 </template>

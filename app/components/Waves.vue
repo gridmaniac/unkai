@@ -1,9 +1,9 @@
 <template>
-  <section class="absolute inset-0 overflow-hidden -z-10">
+  <section class="absolute inset-0 -z-10 overflow-hidden">
     <div class="wave absolute">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span />
+      <span />
+      <span />
     </div>
   </section>
 </template>

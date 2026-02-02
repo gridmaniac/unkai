@@ -32,7 +32,7 @@ const { onFileUpload } = useFileUpload(async (base64: string) => {
 <template>
   <div class="flex gap-2">
     <button
-      class="btn size-24 flex justify-center items-center btn-soft"
+      class="btn btn-soft flex size-24 items-center justify-center"
       @click="updateWithFile"
     >
       <IconImageUpload class="size-8" />
@@ -42,7 +42,7 @@ const { onFileUpload } = useFileUpload(async (base64: string) => {
       <div class="w-24 rounded">
         <img :src="image" />
         <IconDelete02
-          class="size-6 absolute bottom-2 right-2 cursor-pointer"
+          class="absolute right-2 bottom-2 size-6 cursor-pointer"
           @click="emit('delete', index)"
         />
       </div>

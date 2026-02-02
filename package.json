@@ -7,17 +7,19 @@
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@langchain/textsplitters": "^1.0.1",
-    "@nuxt/content": "^3.7.1",
     "@nuxt/eslint": "^1.9.0",
     "@pinecone-database/pinecone": "^7.0.0",
     "@pinia/colada": "^0.21.1",
     "@pinia/colada-nuxt": "^0.3.0",
     "@tailwindcss/vite": "^4.1.13",
-    "better-sqlite3": "^12.3.0",
     "cloudinary": "^2.9.0",
     "daisyui": "^5.1.14",
     "eslint": "^9.36.0",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@pinia/nuxt": "^0.11.3",
     "nuxt-mongoose": "^1.0.6",
-    "sass-embedded": "^1.93.1"
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

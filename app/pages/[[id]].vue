@@ -43,11 +43,11 @@ const deleteImage = async (index: number) => {
 <template>
   <div class="flex h-screen">
     <div
-      class="sm:max-w-lg w-full max-h-screen overflow-y-auto sm:block"
+      class="max-h-screen w-full overflow-y-auto sm:block sm:max-w-lg"
       :class="{ hidden: !!memoryId }"
     >
       <div
-        class="m-2 p-2 sticky top-2 bg-base-100 z-10 rounded-box opacity-90 flex justify-between items-center gap-4"
+        class="bg-base-100 rounded-box sticky top-2 z-10 m-2 flex items-center justify-between gap-4 p-2 opacity-90"
       >
         <label class="input input-ghost w-full">
           <IconSearch01 class="size-6" />
@@ -61,12 +61,12 @@ const deleteImage = async (index: number) => {
       </ul>
     </div>
     <div
-      class="flex-1 relative flex p-4 flex-col gap-4"
+      class="relative flex flex-1 flex-col gap-4 p-4"
       :class="{ hidden: !memoryId }"
     >
       <div
         v-if="isLoading"
-        class="absolute inset-0 flex justify-center items-center"
+        class="absolute inset-0 flex items-center justify-center"
       >
         <span class="loading loading-bars loading-xl" />
       </div>
@@ -75,7 +75,7 @@ const deleteImage = async (index: number) => {
         <input
           v-model="activeMemory.title"
           type="text"
-          class="input input-ghost w-full input-xl flex-1"
+          class="input input-ghost input-xl w-full flex-1"
           @blur="save"
         />
 

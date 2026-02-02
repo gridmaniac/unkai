@@ -15,22 +15,22 @@ const displayDate = computed(() => {
 </script>
 
 <template>
-  <div class="flex justify-between items-center gap-4 py-2">
+  <div class="flex items-center justify-between gap-4 py-2">
     <div>
-      <div class="text-lg line-clamp-1 font-semibold">
+      <div class="line-clamp-1 text-lg font-semibold">
         {{ memory.title }}
       </div>
-      <div class="text-sm text-base-content/60 line-clamp-2">
+      <div class="text-base-content/60 line-clamp-2 text-sm">
         <strong>{{ displayDate }}</strong> {{ memory.text }}
       </div>
     </div>
-    <div class="flex items-center gap-4 flex-shrink-0">
+    <div class="flex flex-shrink-0 items-center gap-4">
       <img
         v-if="memory.images.length > 0"
         class="size-10 rounded"
         :src="memory.images[0]"
       />
-      <div v-else class="size-10 rounded bg-base-content/10" />
+      <div v-else class="bg-base-content/10 size-10 rounded" />
       <IconArrowRight01 class="size-6" />
     </div>
   </div>
