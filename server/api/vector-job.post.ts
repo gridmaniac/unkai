@@ -29,7 +29,7 @@ export default defineEventHandler(async () => {
     return null;
   }
 
-  const index = pc.index("unkai");
+  const index = pc.index(process.env.PINECONE_INDEX_NAME || "");
 
   await index.upsertRecords({
     records,
