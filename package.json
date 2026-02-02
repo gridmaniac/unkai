@@ -33,6 +33,7 @@
     "@pinia/nuxt": "^0.11.3",
     "nuxt-mongoose": "^1.0.6",
     "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2"
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "sass-embedded": "^1.97.3"
   }
 }
