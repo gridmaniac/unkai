@@ -1,12 +1,12 @@
-export const useUpdateMemory = defineMutation(() => {
+export const useShallowUpdateMemory = defineMutation(() => {
   const queryCache = useQueryCache();
 
-  const { mutateAsync: updateMemory, ...mutation } = useMutation({
+  const { mutateAsync: shallowUpdateMemory, ...mutation } = useMutation({
     mutation: async (memory: Memory) => {
       await $fetch<string>("/api/memory", {
         method: "PUT",
         query: {
-          requiresSync: true,
+          requiresSync: false,
         },
         body: memory,
       });
@@ -17,6 +17,6 @@ export const useUpdateMemory = defineMutation(() => {
 
   return {
     ...mutation,
-    updateMemory,
+    shallowUpdateMemory,
   };
 });

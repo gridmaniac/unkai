@@ -12,10 +12,7 @@ const { deleteMemory } = useDeleteMemory();
       tabindex="0"
       class="dropdown-content menu bg-base-100 rounded-box z-1 w-48 p-2 shadow-sm"
     >
-      <li><a>Generate embeddings</a></li>
-      <li><a>Display embeddings</a></li>
-      <li><a>Drop embeddings</a></li>
-      <li @click="deleteMemory(memoryId)"><a>Delete document</a></li>
+      <li @click="deleteMemory(memoryId)"><a>Delete memory</a></li>
     </ul>
   </div>
 </template>

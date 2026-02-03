@@ -17,3 +17,8 @@ interface PineconeRecord {
   text: string;
   memoryId: string;
 }
+
+interface Stats {
+  total: number;
+  totalSync: number;
+}

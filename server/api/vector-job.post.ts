@@ -16,20 +16,22 @@ export default defineEventHandler(async () => {
   const records = memories.reduce((acc, memory) => {
     memory.chunks.forEach((chunk, index) => {
       acc.push({
-        id: memory._id + "+" + index,
+        id: memory._id + "#" + index,
         title: memory.title,
         text: chunk,
         memoryId: memory._id,
+        dateFrom: memory.dateFrom.valueOf(),
+        dateTo: memory.dateTo?.valueOf() || 0,
       });
     });
     return acc;
   }, [] as IntegratedRecord<RecordMetadata>[]);
 
   if (records.length === 0) {
-    return null;
+    return 0;
   }
 
-  const index = pc.index(process.env.PINECONE_INDEX_NAME || "");
+  const index = pc.index({ name: process.env.PINECONE_INDEX_NAME || "" });
 
   await index.upsertRecords({
     records,
@@ -40,5 +42,5 @@ export default defineEventHandler(async () => {
     await memory.save();
   }
 
-  return null;
+  return memories.length;
 });

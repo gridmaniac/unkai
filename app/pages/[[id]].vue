@@ -12,32 +12,64 @@ const setDate = () => {
 
 const { memories } = useMemories();
 const { memory, memoryId, isLoading } = useMemory();
+const { stats } = useStats();
 const { updateMemory } = useUpdateMemory();
+const { shallowUpdateMemory } = useShallowUpdateMemory();
 
 watch(memory, (newMemory) => {
-  activeMemory.value = newMemory;
+  activeMemory.value = newMemory ? { ...newMemory } : undefined;
 });
 
 onMounted(() => {
-  activeMemory.value = memory.value;
+  activeMemory.value = memory.value ? { ...memory.value } : undefined;
 });
 
 const save = async () => {
-  if (!activeMemory.value) return;
+  if (!memory.value || !activeMemory.value) return;
+  if (!activeMemory.value.title || !activeMemory.value.text) return;
+  if (
+    memory.value.title === activeMemory.value.title &&
+    memory.value.text === activeMemory.value.text &&
+    memory.value.dateFrom === activeMemory.value.dateFrom &&
+    memory.value.dateTo === activeMemory.value.dateTo
+  )
+    return;
+
   await updateMemory({ ...activeMemory.value });
 };
 
 const saveImage = async (image: string) => {
   if (!activeMemory.value) return;
   activeMemory.value.images.push(image);
-  await updateMemory(activeMemory.value);
+  await shallowUpdateMemory(activeMemory.value);
 };
 
 const deleteImage = async (index: number) => {
   if (!activeMemory.value) return;
   activeMemory.value.images.splice(index, 1);
-  await updateMemory(activeMemory.value);
+  await shallowUpdateMemory(activeMemory.value);
 };
+
+// const text = ref("");
+
+// async function sendMessage() {
+//   const res = await fetch("/api/prompt", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//   });
+
+//   const reader = res.body!.getReader();
+//   const decoder = new TextDecoder();
+//   text.value = "";
+
+//   while (true) {
+//     const { value, done } = await reader.read();
+//     if (done) break;
+
+//     text.value += decoder.decode(value);
+//     console.log(text); // ← обновляй UI здесь
+//   }
+// }
 </script>
 
 <template>
@@ -53,6 +85,9 @@ const deleteImage = async (index: number) => {
           <IconSearch01 class="size-6" />
           <input type="search" class="grow" />
         </label>
+      </div>
+      <div class="divider divider-neutral text-xs">
+        {{ stats?.totalSync }} / {{ stats?.total }}
       </div>
       <ul class="menu w-full">
         <li v-for="item in memories" :key="item._id">
@@ -78,6 +113,20 @@ const deleteImage = async (index: number) => {
           class="input input-ghost input-xl w-full flex-1"
           @blur="save"
         />
+
+        <div class="inline-grid *:[grid-area:1/1]">
+          <div
+            v-if="!activeMemory.requiresSync"
+            class="status status-info animate-ping"
+          />
+          <div
+            class="status"
+            :class="{
+              'status-info': !activeMemory.requiresSync,
+              'status-neutral': activeMemory.requiresSync,
+            }"
+          />
+        </div>
 
         <Menu />
       </div>
