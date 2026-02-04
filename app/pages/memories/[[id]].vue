@@ -133,11 +133,11 @@ watch(debouncedSearch, () => {
       >
         <label class="input input-ghost w-full">
           <IconSearch01 class="size-6" />
-          <input v-model.trim="debouncedSearch" type="search" class="grow" />
+          <input v-model.trim="debouncedSearch" class="grow" />
           <span v-if="total" class="text-xs">{{ total }}</span>
-          <!-- <kbd v-if="debouncedSearch" class="kbd" @click="debouncedSearch = ''"
+          <kbd v-if="debouncedSearch" class="kbd" @click="debouncedSearch = ''"
             >×</kbd
-          > -->
+          >
         </label>
       </div>
       <!-- <div class="divider divider-neutral text-xs">
