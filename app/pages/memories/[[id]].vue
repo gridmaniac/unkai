@@ -3,15 +3,6 @@ const router = useRouter();
 const { query } = useRoute();
 const activeMemory = ref<Memory>();
 
-const setDate = () => {
-  if (!activeMemory.value) return;
-  activeMemory.value.dateTo = activeMemory.value?.dateTo
-    ? null
-    : new Date(new Date().toISOString().split("T")[0] || "");
-
-  save();
-};
-
 const { memory, memoryId, isLoading } = useMemory();
 const {
   memories,
@@ -40,6 +31,15 @@ watch(memory, (newMemory) => {
 onMounted(() => {
   activeMemory.value = memory.value ? { ...memory.value } : undefined;
 });
+
+const setDate = () => {
+  if (!activeMemory.value) return;
+  activeMemory.value.dateTo = activeMemory.value?.dateTo
+    ? null
+    : new Date(new Date().toISOString().split("T")[0] || "");
+
+  save();
+};
 
 const save = async () => {
   if (!memory.value || !activeMemory.value) return;
@@ -143,7 +143,10 @@ watch(debouncedSearch, () => {
       <!-- <div class="divider divider-neutral text-xs">
         {{ stats?.totalSync }} / {{ stats?.total }}
       </div> -->
-      <ul ref="list" class="menu w-full">
+      <div v-if="isPending" class="flex flex-col gap-2 p-2">
+        <div v-for="i in 7" :key="i" class="skeleton h-20 w-full" />
+      </div>
+      <ul v-else ref="list" class="menu w-full">
         <li v-for="item in memories" :key="item._id" class="w-full">
           <MemoryCard
             :memory="item"

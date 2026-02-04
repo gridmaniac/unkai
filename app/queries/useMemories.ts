@@ -29,7 +29,13 @@ export const useMemories = defineQuery(() => {
 
       hasNextPage.value = data.hasNextPage;
       total.value = data.total;
-      return [...(previousData ?? []), ...data.list];
+
+      return [
+        ...(previousData ?? []),
+        ...data.list.filter(
+          (item) => !(previousData ?? []).some((p) => p._id === item._id),
+        ),
+      ];
     },
   });
 
