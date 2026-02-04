@@ -26,6 +26,12 @@ const {
 // const { stats } = useStats();
 const { updateMemory } = useUpdateMemory();
 const { shallowUpdateMemory } = useShallowUpdateMemory();
+const { createMemory } = useCreateMemory();
+
+const createNewMemory = async () => {
+  const memoryId = await createMemory();
+  navigateTo(`/memories/${memoryId}`);
+};
 
 watch(memory, (newMemory) => {
   activeMemory.value = newMemory ? { ...newMemory } : undefined;
@@ -139,7 +145,10 @@ watch(debouncedSearch, () => {
       </div> -->
       <ul ref="list" class="menu w-full">
         <li v-for="item in memories" :key="item._id" class="w-full">
-          <MemoryCard :memory="item" @click="navigateTo(`/${item._id}`)" />
+          <MemoryCard
+            :memory="item"
+            @click="navigateTo(`/memories/${item._id}`)"
+          />
         </li>
         <li
           v-if="hasNextPage"
@@ -235,6 +244,12 @@ watch(debouncedSearch, () => {
         @update="saveImage"
         @delete="deleteImage"
       />
+    </div>
+
+    <div class="fab">
+      <button class="btn btn-lg btn-circle btn-soft" @click="createNewMemory">
+        <IconAdd02 class="size-6" />
+      </button>
     </div>
   </div>
 </template>

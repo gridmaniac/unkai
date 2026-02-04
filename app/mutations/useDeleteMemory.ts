@@ -7,7 +7,7 @@ export const useDeleteMemory = defineMutation(() => {
           id: memoryId,
         },
       });
-      navigateTo("/");
+      navigateTo("/memories");
     },
   });
 
