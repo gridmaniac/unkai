@@ -22,3 +22,11 @@ interface Stats {
   total: number;
   totalSync: number;
 }
+
+interface Paginated<T> {
+  list: T;
+  total: number;
+  page: number;
+  pageSize: number;
+  hasNextPage: boolean;
+}

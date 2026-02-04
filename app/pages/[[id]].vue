@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const router = useRouter();
+const { query } = useRoute();
 const activeMemory = ref<Memory>();
 
 const setDate = () => {
@@ -10,9 +12,18 @@ const setDate = () => {
   save();
 };
 
-const { memories } = useMemories();
 const { memory, memoryId, isLoading } = useMemory();
-const { stats } = useStats();
+const {
+  memories,
+  debouncedSearch,
+  page,
+  hasNextPage,
+  total,
+  refetch,
+  isPending,
+} = useMemories();
+
+// const { stats } = useStats();
 const { updateMemory } = useUpdateMemory();
 const { shallowUpdateMemory } = useShallowUpdateMemory();
 
@@ -50,6 +61,39 @@ const deleteImage = async (index: number) => {
   await shallowUpdateMemory(activeMemory.value);
 };
 
+const bottomEl = useTemplateRef("bottom");
+const listEl = useTemplateRef("list");
+
+debouncedSearch.value = (query.search as string) || "";
+
+useIntersectionObserver(bottomEl, ([entry]) => {
+  if (
+    !entry?.isIntersecting ||
+    !memories.value?.length ||
+    !hasNextPage.value ||
+    isPending.value
+  )
+    return;
+
+  page.value++;
+  refetch();
+
+  listEl.value?.scrollTo({ top: listEl.value?.scrollHeight });
+});
+
+watch(debouncedSearch, () => {
+  page.value = 1;
+  listEl.value?.scrollTo({ top: 0 });
+
+  // Update URL query parameter
+  router.replace({
+    query: {
+      ...query,
+      search: debouncedSearch.value || undefined,
+    },
+  });
+});
+
 // const text = ref("");
 
 // async function sendMessage() {
@@ -83,15 +127,26 @@ const deleteImage = async (index: number) => {
       >
         <label class="input input-ghost w-full">
           <IconSearch01 class="size-6" />
-          <input type="search" class="grow" />
+          <input v-model.trim="debouncedSearch" type="search" class="grow" />
+          <span v-if="total" class="text-xs">{{ total }}</span>
+          <!-- <kbd v-if="debouncedSearch" class="kbd" @click="debouncedSearch = ''"
+            >×</kbd
+          > -->
         </label>
       </div>
-      <div class="divider divider-neutral text-xs">
+      <!-- <div class="divider divider-neutral text-xs">
         {{ stats?.totalSync }} / {{ stats?.total }}
-      </div>
-      <ul class="menu w-full">
-        <li v-for="item in memories" :key="item._id">
+      </div> -->
+      <ul ref="list" class="menu w-full">
+        <li v-for="item in memories" :key="item._id" class="w-full">
           <MemoryCard :memory="item" @click="navigateTo(`/${item._id}`)" />
+        </li>
+        <li
+          v-if="hasNextPage"
+          ref="bottom"
+          class="flex w-full items-center justify-center py-6"
+        >
+          <progress class="progress w-20" />
         </li>
       </ul>
     </div>

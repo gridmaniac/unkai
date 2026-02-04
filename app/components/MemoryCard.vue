@@ -20,7 +20,7 @@ const displayDate = computed(() => {
       <div class="line-clamp-1 text-lg font-semibold">
         {{ memory.title }}
       </div>
-      <div class="text-base-content/60 line-clamp-2 text-sm">
+      <div class="text-base-content/60 line-clamp-2 text-sm break-all">
         <strong>{{ displayDate }}</strong> {{ memory.text }}
       </div>
     </div>
@@ -30,7 +30,7 @@ const displayDate = computed(() => {
         class="size-10 rounded"
         :src="memory.images[0]"
       />
-      <div v-else class="bg-base-content/10 size-10 rounded" />
+      <div v-else class="bg-base-content/10 hidden size-10 rounded" />
       <IconArrowRight01 class="size-6" />
     </div>
   </div>

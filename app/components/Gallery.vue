@@ -32,17 +32,17 @@ const { onFileUpload } = useFileUpload(async (base64: string) => {
 <template>
   <div class="flex gap-2">
     <button
-      class="btn btn-soft flex size-24 items-center justify-center"
+      class="btn btn-soft flex size-16 items-center justify-center sm:size-24"
       @click="updateWithFile"
     >
       <IconImageUpload class="size-8" />
       <input ref="fileEl" type="file" hidden @change="onFileUpload" />
     </button>
     <div v-for="(image, index) in images" :key="image" class="avatar">
-      <div class="w-24 rounded">
+      <div class="w-16 rounded sm:w-24">
         <img :src="image" />
         <IconDelete02
-          class="absolute right-2 bottom-2 size-6 cursor-pointer"
+          class="absolute right-2 bottom-2 size-4 cursor-pointer sm:size-6"
           @click="emit('delete', index)"
         />
       </div>
