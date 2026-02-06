@@ -12,16 +12,16 @@ export default defineEventHandler(async () => {
     messages: [
       {
         role: "system",
-        content: `Based on input extract json { dateFrom: ..., dateTo: ...} in ISOString format, now is ${new Date()} keep NULLs if some not specified`,
-      },
-      {
-        role: "user",
-        content: `Сделай резюме по последним 10 годам но только основные компании и проекты`,
+        content: `Based on input extract json { dateFrom: ..., dateTo: ...} in ISOString format, now is ${new Date()} keep NULLs if some not specified. Try to assume the date period for better data releavance`,
       },
       // {
       //   role: "user",
-      //   content: `Ты когда-нибудь ходил в караоке?`,
+      //   content: `Сделай резюме по последним 10 годам но только основные компании и проекты`,
       // },
+      {
+        role: "user",
+        content: `Каково твое мнение о феминистках`,
+      },
       // {
       //   role: "user",
       //   content: `Выдай резюме по всем компаниям где работал`,

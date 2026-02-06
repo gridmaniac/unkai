@@ -16,6 +16,7 @@ interface Chunk {
 interface PineconeRecord {
   text: string;
   memoryId: string;
+  dateFrom: Date;
 }
 
 interface Stats {

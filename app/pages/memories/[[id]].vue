@@ -99,27 +99,6 @@ watch(debouncedSearch, () => {
     },
   });
 });
-
-// const text = ref("");
-
-// async function sendMessage() {
-//   const res = await fetch("/api/prompt", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//   });
-
-//   const reader = res.body!.getReader();
-//   const decoder = new TextDecoder();
-//   text.value = "";
-
-//   while (true) {
-//     const { value, done } = await reader.read();
-//     if (done) break;
-
-//     text.value += decoder.decode(value);
-//     console.log(text); // ← обновляй UI здесь
-//   }
-// }
 </script>
 
 <template>
