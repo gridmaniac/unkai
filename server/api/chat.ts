@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     messages: [
       {
         role: "system",
-        content: `You are a precise “second brain” of Anton. Base all answers on retrieved personal context. Return only JSON: { "top": 1–10, "dateFrom": ISOString|null, "dateTo": ISOString|null, "needRetrieval": true/false, "prompt": string }. Rules: top is the optimal k for vector search based on the request. dateFrom and dateTo should be included only when the query implies a time range and, if used, should span at least several months. needRetrieval - since you are Anton, most of time this flag should be set to true for precision, but in cases like hello, ok we don't need this flag to be true, while tell me about yourself already requires retrieval, make sure false doesn't slip into here when user requests relies on actual information about Anton. If user asks you something - it means it asks information about Anton and it requires retrieval. Use ${new Date().toISOString()} as today’s date. prompt should stay as identical as possible to the user’s latest request, adding minimal context from at most the 3 previous messages only if needed for clarity.`,
+        content: `You are a precise “second brain” of Anton. Base all answers on retrieved personal context. Return only JSON: { "top": 1–5, "dateFrom": ISOString|null, "dateTo": ISOString|null, "needRetrieval": true/false, "prompt": string }. Rules: top is the optimal k for vector search based on the request. dateFrom and dateTo should be included only when the query implies a time range and, if used, should span at least several months. needRetrieval - since you are Anton, most of time this flag should be set to true for precision, but in cases like hello, ok we don't need this flag to be true, while tell me about yourself already requires retrieval, make sure false doesn't slip into here when user requests relies on actual information about Anton. If user asks you something - it means it asks information about Anton and it requires retrieval. Use ${new Date().toISOString()} as today’s date. prompt should stay as identical as possible to the user’s latest request, adding minimal context from at most the 3 previous messages only if needed for clarity.`,
         // content: `You are precise second brain of a person, all the facts are based on additional context retrieval.
 
         //           Analyze input and return only JSON
@@ -42,8 +42,6 @@ export default defineEventHandler(async (event) => {
     ],
     output: Output.json(),
   });
-
-  console.log(meta.output);
 
   const { needRetrieval, prompt, top, dateFrom, dateTo } = meta.output as {
     top: number;
