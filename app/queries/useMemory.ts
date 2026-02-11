@@ -10,6 +10,7 @@ export const useMemory = defineQuery(() => {
         params: {
           id: memoryId.value,
         },
+        headers: useRequestHeaders(),
       });
 
       return memory;

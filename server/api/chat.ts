@@ -54,6 +54,8 @@ export default defineEventHandler(async (event) => {
   const dateFromUnix = dateFrom ? new Date(dateFrom).valueOf() : 0;
   const dateToUnix = dateTo ? new Date(dateTo).valueOf() : 0;
 
+  console.log(meta.output);
+
   let context = "";
   if (needRetrieval) {
     const pc = new Pinecone({
@@ -85,7 +87,7 @@ export default defineEventHandler(async (event) => {
     if (top <= 3) {
       const uniqueMemoryIds = [...new Set(chunks.map((c) => c.memoryId))];
       const memories = await Memory.find({
-        memoryId: { $in: uniqueMemoryIds },
+        _id: { $in: uniqueMemoryIds },
       });
 
       context = memories.reduce((acc: string, x: Memory) => {

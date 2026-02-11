@@ -20,6 +20,7 @@ export const useMemories = defineQuery(() => {
           search: search.value,
           page: page.value,
         },
+        headers: useRequestHeaders(),
       });
 
       const previousData = queryCache.getQueryData<Memory[]>([

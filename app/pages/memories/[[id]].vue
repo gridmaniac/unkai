@@ -17,12 +17,6 @@ const {
 // const { stats } = useStats();
 const { updateMemory } = useUpdateMemory();
 const { shallowUpdateMemory } = useShallowUpdateMemory();
-const { createMemory } = useCreateMemory();
-
-const createNewMemory = async () => {
-  const memoryId = await createMemory();
-  navigateTo(`/memories/${memoryId}`);
-};
 
 watch(memory, (newMemory) => {
   activeMemory.value = newMemory ? { ...newMemory } : undefined;
@@ -69,6 +63,7 @@ const deleteImage = async (index: number) => {
 
 const bottomEl = useTemplateRef("bottom");
 const listEl = useTemplateRef("list");
+const containerEl = useTemplateRef("container");
 
 debouncedSearch.value = (query.search as string) || "";
 
@@ -99,11 +94,23 @@ watch(debouncedSearch, () => {
     },
   });
 });
+
+onBeforeRouteUpdate(() => {
+  window.persistedScrollTop = containerEl.value?.scrollTop;
+});
+
+onMounted(() => {
+  if (import.meta.server) return;
+  containerEl.value?.scrollTo({
+    top: window.persistedScrollTop || 0,
+  });
+});
 </script>
 
 <template>
   <div class="flex h-screen">
     <div
+      ref="container"
       class="max-h-screen w-full overflow-y-auto sm:block sm:max-w-lg"
       :class="{ hidden: !!memoryId }"
     >
@@ -122,6 +129,7 @@ watch(debouncedSearch, () => {
       <!-- <div class="divider divider-neutral text-xs">
         {{ stats?.totalSync }} / {{ stats?.total }}
       </div> -->
+
       <div v-if="isPending" class="flex flex-col gap-2 p-2">
         <div v-for="i in 7" :key="i" class="skeleton h-20 w-full" />
       </div>
@@ -177,7 +185,13 @@ watch(debouncedSearch, () => {
         <Menu />
       </div>
 
-      <div v-if="activeMemory && !isLoading" class="flex gap-2">
+      <div v-if="activeMemory && !isLoading" class="flex">
+        <button
+          class="btn btn-ghost sm:hidden"
+          @click="navigateTo('/memories')"
+        >
+          <IconListView class="size-6" />
+        </button>
         <input
           class="input input-ghost"
           type="date"
@@ -226,12 +240,6 @@ watch(debouncedSearch, () => {
         @update="saveImage"
         @delete="deleteImage"
       />
-    </div>
-
-    <div class="fab">
-      <button class="btn btn-lg btn-circle btn-soft" @click="createNewMemory">
-        <IconAdd02 class="size-6" />
-      </button>
     </div>
   </div>
 </template>
