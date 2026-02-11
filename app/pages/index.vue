@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Chat } from "@ai-sdk/vue";
 const input = ref("");
+const textareaRef = useTemplateRef("textarea");
 const chat = new Chat({
   onFinish() {
     containerEl.value?.scrollTo({ top: containerEl.value?.scrollHeight });
@@ -24,6 +25,9 @@ watch(
       }, 100);
     } else {
       clearInterval(timeout);
+      nextTick(() => {
+        textareaRef.value?.focus();
+      });
     }
     // console.log("what");
   },
@@ -158,16 +162,29 @@ async function sendMessage() {
           <div class="chat-header">Антон</div>
           <div class="chat-bubble">{{ streamText }}</div>
         </div>
+
+        <div v-if="chat.status === 'submitted'" class="chat chat-start">
+          <div class="chat-image avatar">
+            <div class="w-10 rounded-full">
+              <img src="https://avatars.githubusercontent.com/u/25141263?v=4" />
+            </div>
+          </div>
+          <div class="chat-header">Антон</div>
+          <div class="chat-bubble">
+            <span class="loading loading-dots loading-sm" />
+          </div>
+        </div>
       </div>
 
       <div class="divider" />
 
       <label class="textarea textarea-lg flex w-full items-center gap-2">
         <textarea
+          ref="textarea"
           v-model.trim="input"
           class="grow"
           rows="2"
-          :disabled="false"
+          :disabled="chat.status !== 'ready'"
           placeholder="Задать вопрос"
           @keydown.enter="handleSubmit"
         />

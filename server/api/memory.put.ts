@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
   const docs = await splitter.createDocuments([memory.text]);
   memory.chunks = docs.map((doc) => doc.pageContent);
-  memory.requiresSync = requiresSync;
+  if (requiresSync) memory.requiresSync = true;
 
   await Memory.findByIdAndUpdate(memory._id, memory);
 });
