@@ -185,13 +185,7 @@ onMounted(() => {
         <Menu />
       </div>
 
-      <div v-if="activeMemory && !isLoading" class="flex">
-        <button
-          class="btn btn-ghost sm:hidden"
-          @click="navigateTo('/memories')"
-        >
-          <IconListView class="size-6" />
-        </button>
+      <div v-if="activeMemory && !isLoading" class="flex gap-2">
         <input
           class="input input-ghost"
           type="date"
