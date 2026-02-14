@@ -12,7 +12,6 @@ export const useUpdateMemory = defineMutation(() => {
       });
 
       queryCache.setQueryData(["memory", memory._id], memory);
-      queryCache.invalidateQueries({ key: ["memories"] });
     },
   });
 
