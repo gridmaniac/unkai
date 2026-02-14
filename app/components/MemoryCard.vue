@@ -15,9 +15,9 @@ const displayDate = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between gap-4 py-2">
-    <div>
-      <div class="line-clamp-1 text-lg font-semibold">
+  <div class="flex w-full items-center justify-between gap-4 py-2">
+    <div class="min-w-0">
+      <div class="line-clamp-1 text-lg font-semibold break-all">
         {{ memory.title }}
       </div>
       <div class="text-base-content/60 line-clamp-2 text-sm break-all">

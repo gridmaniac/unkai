@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia/colada-nuxt",
     "@vueuse/nuxt",
+    "@nuxtjs/mdc",
   ],
   imports: {
     dirs: ["queries", "mutations"],

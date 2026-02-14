@@ -118,7 +118,11 @@ const localStrings = computed(() => {
                 v-for="(part, index) in message.parts"
                 :key="`${message.id}-${part.type}-${index}`"
               >
-                <div v-if="part.type === 'text'">{{ part.text }}</div>
+                <MDC
+                  v-if="part.type === 'text'"
+                  :value="part.text"
+                  :cache-key="`${message.id}-${part.type}-${index}`"
+                />
               </div>
             </div>
           </div>
