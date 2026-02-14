@@ -57,9 +57,22 @@ watch(
 );
 
 const { language } = useNavigatorLanguage();
-const localStrings = computed(() => {
+const localStrings = ref({
+  name: "Anton",
+  message: "Hey, it's Anton. What do you want to know?",
+  placeholder: "Ask me anything",
+  disclaimer: `For your privacy, this chat
+      <a
+        class="link"
+        href="https://github.com/gridmaniac/unkai"
+        target="_blank"
+        >isn’t saved anywhere</a
+      >.`,
+});
+
+onMounted(() => {
   if (language.value?.indexOf("ru") !== -1) {
-    return {
+    localStrings.value = {
       name: "Антон",
       message: "Привет. Это Антон, что хочешь узнать?",
       placeholder: "Задать вопрос",
@@ -73,19 +86,24 @@ const localStrings = computed(() => {
         не сохраняется.`,
     };
   }
+});
 
-  return {
-    name: "Anton",
-    message: "Hey, it's Anton. What do you want to know?",
-    placeholder: "Ask me anything",
-    disclaimer: `For your privacy, this chat
-      <a
-        class="link"
-        href="https://github.com/gridmaniac/unkai"
-        target="_blank"
-        >isn’t saved anywhere</a
-      >.`,
-  };
+watch(language, (val) => {
+  if (val?.indexOf("en") !== -1) {
+    localStrings.value = {
+      name: "Антон",
+      message: "Привет. Это Антон, что хочешь узнать?",
+      placeholder: "Задать вопрос",
+      disclaimer: `С целью вашей анонимности, данный чат
+        <a
+          class="link"
+          href="https://github.com/gridmaniac/unkai"
+          target="_blank"
+          >нигде</a
+        >
+        не сохраняется.`,
+    };
+  }
 });
 </script>
 
