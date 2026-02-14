@@ -10,7 +10,7 @@ export default defineEventHandler(async () => {
   });
 
   const memories = await Memory.find({ requiresSync: true }, null, {
-    limit: 10,
+    limit: 5,
   });
 
   const records = memories.reduce((acc, memory) => {
