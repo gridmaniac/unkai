@@ -40,7 +40,9 @@ const { onFileUpload } = useFileUpload(async (base64: string) => {
     </button>
     <div v-for="(image, index) in images" :key="image" class="avatar">
       <div class="w-16 rounded sm:w-24">
-        <img :src="image" />
+        <a :href="image" target="_blank"
+          ><img class="cursor-alias" :src="image"
+        /></a>
         <IconDelete02
           class="absolute right-2 bottom-2 size-4 cursor-pointer sm:size-6"
           @click="emit('delete', index)"
