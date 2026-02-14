@@ -130,7 +130,7 @@ watch(language, (val) => {
                 />
               </div>
             </div>
-            <div class="chat-header">Антон</div>
+            <div class="chat-header">{{ localStrings.name }}</div>
             <div class="chat-bubble">
               <div
                 v-for="(part, index) in message.parts"
@@ -162,7 +162,7 @@ watch(language, (val) => {
               <img src="https://avatars.githubusercontent.com/u/25141263?v=4" />
             </div>
           </div>
-          <div class="chat-header">Антон</div>
+          <div class="chat-header">{{ localStrings.name }}</div>
           <div class="chat-bubble">
             <span class="loading loading-dots loading-sm" />
           </div>
