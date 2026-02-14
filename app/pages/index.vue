@@ -30,7 +30,6 @@ const handleSubmit = (e: Event) => {
 };
 
 let timeout: NodeJS.Timeout;
-
 watch(
   () => chat.status,
   () => {
@@ -47,6 +46,7 @@ watch(
   },
 );
 
+const containerEl = useTemplateRef("container");
 watch(
   () => chat.messages,
   () => {
@@ -56,12 +56,42 @@ watch(
   },
 );
 
-const containerEl = useTemplateRef("container");
+const { language } = useNavigatorLanguage();
+const localStrings = computed(() => {
+  if (language.value?.indexOf("ru") !== -1) {
+    return {
+      name: "Антон",
+      message: "Привет. Это Антон, что хочешь узнать?",
+      placeholder: "Задать вопрос",
+      disclaimer: `С целью вашей анонимности, данный чат
+        <a
+          class="link"
+          href="https://github.com/gridmaniac/unkai"
+          target="_blank"
+          >нигде</a
+        >
+        не сохраняется.`,
+    };
+  }
+
+  return {
+    name: "Anton",
+    message: "Hey, it's Anton. What do you want to know?",
+    placeholder: "Ask me anything",
+    disclaimer: `For your privacy, this chat
+      <a
+        class="link"
+        href="https://github.com/gridmaniac/unkai"
+        target="_blank"
+        >isn’t saved anywhere</a
+      >.`,
+  };
+});
 </script>
 
 <template>
   <div class="absolute inset-0 flex items-center justify-center">
-    <div class="flex w-full max-w-xl flex-col p-5">
+    <div class="flex w-full max-w-3xl flex-col p-5">
       <div ref="container" class="max-h-[50dvh] overflow-y-auto">
         <div class="chat chat-start">
           <div class="chat-image avatar">
@@ -69,8 +99,8 @@ const containerEl = useTemplateRef("container");
               <img src="https://avatars.githubusercontent.com/u/25141263?v=4" />
             </div>
           </div>
-          <div class="chat-header">Антон</div>
-          <div class="chat-bubble">Привет. Это Антон, что хочешь узнать?</div>
+          <div class="chat-header">{{ localStrings.name }}</div>
+          <div class="chat-bubble">{{ localStrings.message }}</div>
         </div>
 
         <template v-for="(message, i) in chat.messages" :key="i">
@@ -126,7 +156,7 @@ const containerEl = useTemplateRef("container");
           class="grow"
           rows="2"
           :disabled="chat.status !== 'ready'"
-          placeholder="Задать вопрос"
+          :placeholder="localStrings.placeholder"
           @keydown.enter="handleSubmit"
         />
         <button
@@ -137,6 +167,10 @@ const containerEl = useTemplateRef("container");
           <IconSent class="size-6" />
         </button>
       </label>
+      <div
+        class="mt-2 text-xs text-gray-500"
+        v-html="localStrings.disclaimer"
+      />
     </div>
   </div>
 </template>

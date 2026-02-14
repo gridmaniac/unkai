@@ -30,7 +30,7 @@ const { onFileUpload } = useFileUpload(async (base64: string) => {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex max-h-[15rem] flex-wrap gap-2 overflow-auto">
     <button
       class="btn btn-soft flex size-16 items-center justify-center sm:size-24"
       @click="updateWithFile"
