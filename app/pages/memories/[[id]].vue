@@ -127,11 +127,9 @@ onMounted(() => {
         </label>
       </div>
 
-      <ClientOnly>
-        <div class="divider divider-neutral text-xs">
-          {{ stats?.totalSync }} / {{ stats?.total }}
-        </div>
-      </ClientOnly>
+      <div class="divider divider-neutral text-xs">
+        {{ stats?.totalSync }} / {{ stats?.total }}
+      </div>
 
       <div v-if="isPending" class="flex flex-col gap-2 p-2">
         <div v-for="i in 7" :key="i" class="skeleton h-20 w-full" />
