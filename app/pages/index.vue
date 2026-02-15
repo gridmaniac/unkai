@@ -98,7 +98,7 @@ onMounted(() => {
 
 <template>
   <div class="absolute inset-0 flex items-center justify-center">
-    <div class="flex w-full max-w-3xl flex-col gap-2 p-5">
+    <div class="flex w-full max-w-3xl flex-col p-5">
       <div ref="container" class="max-h-[50dvh] overflow-y-auto">
         <div class="chat chat-start">
           <div class="chat-image avatar">
@@ -175,42 +175,40 @@ onMounted(() => {
         </div>
       </div>
 
-      <div>
-        <div class="mt-5 flex flex-row-reverse gap-2">
-          <button
-            class="btn btn-primary btn-soft btn-sm"
-            :disabled="chat.status !== 'ready'"
-            @click="chat.sendMessage({ text: localStrings.topProjectsMsg })"
-          >
-            {{ localStrings.topProjects }}
-          </button>
-        </div>
-
-        <div class="divider my-1" />
-
-        <label class="textarea textarea-lg flex w-full items-center gap-2">
-          <textarea
-            ref="textarea"
-            v-model.trim="input"
-            class="grow"
-            rows="2"
-            :disabled="chat.status !== 'ready'"
-            :placeholder="localStrings.placeholder"
-            @keydown.enter="handleSubmit"
-          />
-          <button
-            class="btn btn-md btn-circle btn-neutral"
-            :disabled="chat.status !== 'ready'"
-            @click="handleSubmit"
-          >
-            <IconSent class="size-6" />
-          </button>
-        </label>
-        <div
-          class="mt-2 text-xs text-gray-500"
-          v-html="localStrings.disclaimer"
-        />
+      <div class="mt-5 flex flex-row-reverse gap-2">
+        <button
+          class="btn btn-primary btn-soft btn-sm"
+          :disabled="chat.status !== 'ready'"
+          @click="chat.sendMessage({ text: localStrings.topProjectsMsg })"
+        >
+          {{ localStrings.topProjects }}
+        </button>
       </div>
+
+      <div class="divider my-1" />
+
+      <label class="textarea textarea-lg flex w-full items-center gap-2">
+        <textarea
+          ref="textarea"
+          v-model.trim="input"
+          class="grow"
+          rows="2"
+          :disabled="chat.status !== 'ready'"
+          :placeholder="localStrings.placeholder"
+          @keydown.enter="handleSubmit"
+        />
+        <button
+          class="btn btn-md btn-circle btn-neutral"
+          :disabled="chat.status !== 'ready'"
+          @click="handleSubmit"
+        >
+          <IconSent class="size-6" />
+        </button>
+      </label>
+      <div
+        class="mt-2 text-xs text-gray-500"
+        v-html="localStrings.disclaimer"
+      />
     </div>
   </div>
 </template>
