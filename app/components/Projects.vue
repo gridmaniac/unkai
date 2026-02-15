@@ -3,18 +3,7 @@ const { items } = defineProps<{
   items: Project[];
 }>();
 
-const emit = defineEmits(["update"]);
-
-onUpdated(() => {
-  emit("update");
-});
-
-watch(
-  () => items,
-  () => {
-    emit("update");
-  },
-);
+const emit = defineEmits(["more"]);
 </script>
 
 <template>
@@ -24,7 +13,7 @@ watch(
       :key="item.id"
       class="carousel-item w-[90%] cursor-pointer sm:w-64"
     >
-      <div class="hover-3d scale-95">
+      <div class="hover-3d scale-95" @click="emit('more', item.title)">
         <div class="card bg-base-100 shadow-sm">
           <div class="card-body">
             <h2 class="card-title">{{ item.title }}</h2>

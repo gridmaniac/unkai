@@ -29,6 +29,10 @@ const handleSubmit = (e: Event) => {
   input.value = "";
 };
 
+const giveMore = (title: string) => {
+  chat.sendMessage({ text: `${localStrings.value?.tellMoreMsg} ${title}` });
+};
+
 let timeout: NodeJS.Timeout;
 watch(
   () => chat.status,
@@ -71,7 +75,12 @@ const localStrings = ref({
       >.`,
   noMessage: "There was a message here. It's gone now...",
   topProjects: "TOP 5 Projects",
-  topProjectsMsg: "Show top 5 projects you worked on",
+  topProjectsMsg: "Show top 5 DIY projects",
+  resume: "CV",
+  resumeMsg: "Show your working history",
+  aboutCat: "About Cat",
+  aboutCatMsg: "Tell me about your cat (with photo md)",
+  tellMoreMsg: "Tell me more about",
 });
 
 onMounted(() => {
@@ -90,7 +99,12 @@ onMounted(() => {
         не сохраняется.`,
       noMessage: "Здесь было сообщение. Теперь его нет...",
       topProjects: "ТОП 5 Проектов",
-      topProjectsMsg: "Покажи топ 5 проектов, над которыми работал",
+      topProjectsMsg: "Покажи топ 5 DIY проектов",
+      resume: "Резюме",
+      resumeMsg: "Покажи свою историю работы",
+      aboutCat: "Про кошку",
+      aboutCatMsg: "Расскажи о своей кошке (with photo md)",
+      tellMoreMsg: "Расскажи поподробнее о",
     };
   }
 });
@@ -135,16 +149,22 @@ onMounted(() => {
                 />
 
                 <Projects
+                  v-if="part.type === 'tool-portfolio'"
+                  :items="part.output as Project[]"
+                  @more="giveMore"
+                />
+
+                <Resume
                   v-if="
                     i === chat.messages.length - 1 &&
-                    part.type === 'tool-portfolio'
+                    part.type === 'tool-resume'
                   "
-                  :items="part.output as Project[]"
+                  :items="part.output as ResumeItem[]"
                 />
                 <div
                   v-if="
                     i !== chat.messages.length - 1 &&
-                    part.type === 'tool-portfolio'
+                    part.type === 'tool-resume'
                   "
                   class="text-sm text-gray-500"
                 >
@@ -180,11 +200,27 @@ onMounted(() => {
 
       <div class="mt-5 flex flex-row-reverse gap-2">
         <button
+          class="btn btn-info btn-soft btn-sm"
+          :disabled="chat.status !== 'ready'"
+          @click="chat.sendMessage({ text: localStrings.aboutCatMsg })"
+        >
+          {{ localStrings.aboutCat }}
+        </button>
+
+        <button
           class="btn btn-primary btn-soft btn-sm"
           :disabled="chat.status !== 'ready'"
           @click="chat.sendMessage({ text: localStrings.topProjectsMsg })"
         >
           {{ localStrings.topProjects }}
+        </button>
+
+        <button
+          class="btn btn-success btn-soft btn-sm"
+          :disabled="chat.status !== 'ready'"
+          @click="chat.sendMessage({ text: localStrings.resumeMsg })"
+        >
+          {{ localStrings.resume }}
         </button>
       </div>
 

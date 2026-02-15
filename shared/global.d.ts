@@ -43,3 +43,9 @@ interface Project {
   title: string;
   description: string;
 }
+
+interface ResumeItem {
+  year: string;
+  place: string;
+  description: string;
+}
