@@ -9,6 +9,7 @@ import {
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { Pinecone } from "@pinecone-database/pinecone";
+import { isValidObjectId } from "mongoose";
 
 export default defineEventHandler(async (event) => {
   const { messages }: { messages: UIMessage[] } = await readBody(event);
@@ -26,6 +27,8 @@ export default defineEventHandler(async (event) => {
     ],
     output: Output.json(),
   });
+
+  console.log(meta.output);
 
   const { needRetrieval, prompt, top, dateFrom, dateTo } = meta.output as {
     top: number;
@@ -66,20 +69,25 @@ export default defineEventHandler(async (event) => {
       ...(x.fields as PineconeRecord),
     }));
 
-    if (top <= 3) {
-      const uniqueMemoryIds = [...new Set(chunks.map((c) => c.memoryId))];
-      const memories = await Memory.find({
-        _id: { $in: uniqueMemoryIds },
-      });
+    // if (top <= 3) {
+    //   const uniqueMemoryIds = [...new Set(chunks.map((c) => c.memoryId))];
+    //   const memories = await Memory.find({
+    //     _id: { $in: uniqueMemoryIds },
+    //   });
 
-      context = memories.reduce((acc: string, x: Memory) => {
-        return (acc += x.title + " " + x.dateFrom + " " + x.text + "; ");
-      }, "");
-    } else {
-      context = chunks.reduce((acc: string, x: PineconeRecord) => {
-        return (acc += x.text);
-      }, "");
-    }
+    //   context = memories.reduce((acc: string, x: Memory) => {
+    //     return (acc +=
+    //       x._id + " " + x.title + " " + x.dateFrom + " " + x.text + "; ");
+    //   }, "");
+    // } else {
+    //   context = chunks.reduce((acc: string, x: PineconeRecord) => {
+    //     return (acc += x.memoryId + " " + x.text);
+    //   }, "");
+    // }
+
+    context = chunks.reduce((acc: string, x: PineconeRecord) => {
+      return (acc += x.title + " " + x.memoryId + " " + x.text);
+    }, "");
   }
 
   const result = streamText({
@@ -92,6 +100,52 @@ export default defineEventHandler(async (event) => {
       ...(await convertToModelMessages(messages.slice(-4))),
     ],
     tools: {
+      portfolio: tool({
+        description:
+          "Get list of projects or games related to topic, simply portfolio",
+        inputSchema: z.object({
+          prompt: z.string().describe("Simplified original user prompt"),
+        }),
+
+        execute: async ({ prompt }) => {
+          const result = await generateText({
+            model: openai("gpt-4o-mini"),
+            messages: [
+              {
+                role: "system",
+                content: `Based on user prompt ${prompt} and context: ${context} generate list of all projects. Return JSON array list: { "list": [{ "id": *SAME ID AS IN CONTEXT*, "title": ..., "description": *SHORT DESCRIPTION*}, ...]}. Inside JSON use same language as in user's prompt.`,
+              },
+            ],
+            output: Output.json(),
+          });
+
+          const { list } = result.output as {
+            list: {
+              id: string;
+              image: string | undefined;
+              title: string;
+              description: string;
+            }[];
+          };
+
+          const uniqueMemoryIds = [
+            ...new Set(
+              list.filter((x) => isValidObjectId(x.id)).map((p) => p.id),
+            ),
+          ];
+
+          const memories = await Memory.find({
+            _id: { $in: uniqueMemoryIds },
+          });
+
+          const projects = list.map((p) => ({
+            ...p,
+            image: memories.find((x) => x.id === p.id)?.images[0],
+          }));
+
+          return projects;
+        },
+      }),
       weather: tool({
         description: "Get the weather in a location (fahrenheit)",
         inputSchema: z.object({

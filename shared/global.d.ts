@@ -14,6 +14,7 @@ interface Chunk {
 }
 
 interface PineconeRecord {
+  title: string;
   text: string;
   memoryId: string;
   dateFrom: Date;
@@ -30,4 +31,15 @@ interface Paginated<T> {
   page: number;
   pageSize: number;
   hasNextPage: boolean;
+}
+
+interface Portfolio {
+  list: Project[];
+}
+
+interface Project {
+  id: string;
+  image: string | undefined;
+  title: string;
+  description: string;
 }
