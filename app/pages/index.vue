@@ -234,6 +234,7 @@ onMounted(() => {
           rows="2"
           :disabled="chat.status !== 'ready'"
           :placeholder="localStrings.placeholder"
+          maxlength="1024"
           @keydown.enter="handleSubmit"
         />
         <button

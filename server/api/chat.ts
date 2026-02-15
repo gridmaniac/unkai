@@ -28,8 +28,6 @@ export default defineEventHandler(async (event) => {
     output: Output.json(),
   });
 
-  console.log(meta.output);
-
   const { needRetrieval, prompt, top, dateFrom, dateTo } = meta.output as {
     top: number;
     dateFrom: string;
