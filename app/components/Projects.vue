@@ -18,13 +18,13 @@ watch(
 </script>
 
 <template>
-  <div class="carousel carousel-end rounded-box w-full">
+  <div class="carousel carousel-end rounded-box w-full gap-2 sm:gap-0">
     <div
       v-for="item in items"
       :key="item.id"
-      class="carousel-item w-52 cursor-pointer sm:w-64"
+      class="carousel-item w-48 cursor-pointer sm:w-64"
     >
-      <div class="hover-3d scale-95">
+      <div class="sm:hover-3d sm:scale-95">
         <div class="card bg-base-100 shadow-sm">
           <div class="card-body">
             <h2 class="card-title">{{ item.title }}</h2>

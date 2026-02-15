@@ -75,7 +75,7 @@ const localStrings = ref({
 });
 
 onMounted(() => {
-  if (language.value?.indexOf("en") !== -1) {
+  if (language.value?.indexOf("ru") !== -1) {
     localStrings.value = {
       name: "Антон",
       message: "Привет. Это Антон, что хочешь узнать?",
