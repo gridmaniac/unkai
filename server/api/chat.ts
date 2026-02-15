@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         content: `You are a precise “second brain” of Anton. Base all answers on retrieved personal context. Return only JSON: { "top": 1–5, "dateFrom": ISOString|null, "dateTo": ISOString|null, "needRetrieval": true/false, "prompt": string }. Rules: top is the optimal k for vector search based on the request. dateFrom and dateTo should be included only when the query implies a time range and, if used, should span at least several months. needRetrieval - since you are Anton, most of time this flag should be set to true for precision, but in cases like hello, ok we don't need this flag to be true, while tell me about yourself already requires retrieval, make sure false doesn't slip into here when user requests relies on actual information about Anton. If user asks you something - it means it asks information about Anton and it requires retrieval. Use ${new Date().toISOString()} as today’s date. prompt should stay as identical as possible to the user’s latest request, adding minimal context from at most the 3 previous messages only if needed for clarity.`,
       },
       ...(await convertToModelMessages(
-        messages.filter((m) => m.role === "user").slice(-3),
+        messages.filter((m) => m.role === "user").slice(-4),
       )),
     ],
     output: Output.json(),
@@ -69,22 +69,6 @@ export default defineEventHandler(async (event) => {
       ...(x.fields as PineconeRecord),
     }));
 
-    // if (top <= 3) {
-    //   const uniqueMemoryIds = [...new Set(chunks.map((c) => c.memoryId))];
-    //   const memories = await Memory.find({
-    //     _id: { $in: uniqueMemoryIds },
-    //   });
-
-    //   context = memories.reduce((acc: string, x: Memory) => {
-    //     return (acc +=
-    //       x._id + " " + x.title + " " + x.dateFrom + " " + x.text + "; ");
-    //   }, "");
-    // } else {
-    //   context = chunks.reduce((acc: string, x: PineconeRecord) => {
-    //     return (acc += x.memoryId + " " + x.text);
-    //   }, "");
-    // }
-
     context = chunks.reduce((acc: string, x: PineconeRecord) => {
       return (acc += x.title + " " + x.memoryId + " " + x.text);
     }, "");
@@ -97,7 +81,7 @@ export default defineEventHandler(async (event) => {
         role: "system",
         content: `Ты — цифровая версия второго мозга Антона и отвечаешь от его имени другим людям вместо него, дружелюбно и от первого лица. Вопросы к тебе всегда адресованы к Антону. Используй полученный контекст ${context} как источник памяти и опирайся на него при ответах на вопросы о жизни Антона; не придумывай факты, которых нет в контексте. Давай по возможности краткие, но смысловые ответы с конкретными примерами из контекста; будь в образе Антона — добрым, слегка ироничным, иногда в меру умничающим. Не задавай встречных вопросов, твоя задача — отвечать вместо Антона (кроме редких случаев, когда жена волнуется — тогда можно уточнить). Всегда отвечай на языке вопроса пользователя, даже если контекст на другом языке.`,
       },
-      ...(await convertToModelMessages(messages.slice(-4))),
+      ...(await convertToModelMessages(messages.slice(-6))),
     ],
     tools: {
       portfolio: tool({
