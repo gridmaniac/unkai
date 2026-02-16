@@ -112,10 +112,10 @@ onMounted(() => {
 
 <template>
   <div class="absolute inset-0 flex items-center justify-center">
-    <div class="flex w-full max-w-3xl flex-col p-5">
+    <div class="flex max-h-full w-full max-w-3xl flex-col p-5">
       <div
         ref="container"
-        class="max-h-[50dvh] overflow-x-hidden overflow-y-auto"
+        class="flex-1 overflow-x-hidden overflow-y-auto sm:max-h-[50dvh]"
       >
         <div class="chat chat-start">
           <div class="chat-image avatar">
