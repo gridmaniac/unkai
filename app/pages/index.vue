@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Chat } from "@ai-sdk/vue";
+const route = useRoute();
 const input = ref("");
 const textareaRef = useTemplateRef("textarea");
 const token = useCookie("token");
@@ -31,6 +32,10 @@ const handleSubmit = (e: Event) => {
 
 const giveMore = (title: string) => {
   chat.sendMessage({ text: `${localStrings.value?.tellMoreMsg} ${title}` });
+};
+
+const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText((window.location.hostname += `?m=${text}`));
 };
 
 let timeout: NodeJS.Timeout;
@@ -107,6 +112,10 @@ onMounted(() => {
       tellMoreMsg: "Расскажи поподробнее о",
     };
   }
+
+  if (route.query.m) {
+    chat.sendMessage({ text: route.query.m.toString() });
+  }
 });
 </script>
 
@@ -174,13 +183,27 @@ onMounted(() => {
             </div>
           </div>
           <div v-else class="chat chat-end">
-            <div class="chat-bubble chat-bubble-neutral">
+            <div class="chat-bubble chat-bubble-neutral flex gap-2">
               <div
                 v-for="(part, index) in message.parts"
                 :key="`${message.id}-${part.type}-${index}`"
               >
                 <div v-if="part.type === 'text'">{{ part.text }}</div>
               </div>
+              <button
+                class="btn btn-ghost btn-square btn-xs"
+                @click="
+                  copyToClipboard(
+                    message.parts
+                      .filter((x) => x.type === 'text')
+                      .reduce((acc, val) => {
+                        return (acc += val.text);
+                      }, ''),
+                  )
+                "
+              >
+                <IconCopyLink class="size-4" />
+              </button>
             </div>
           </div>
         </template>
