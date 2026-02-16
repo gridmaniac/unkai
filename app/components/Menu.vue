@@ -12,7 +12,13 @@ const { deleteMemory } = useDeleteMemory();
       tabindex="0"
       class="dropdown-content menu bg-base-100 rounded-box z-1 w-48 p-2 shadow-sm"
     >
-      <li @click="deleteMemory(memoryId)"><a>Delete memory</a></li>
+      <slot />
+      <li
+        onclick="document.activeElement.blur()"
+        @click="deleteMemory(memoryId)"
+      >
+        <a>Delete memory</a>
+      </li>
     </ul>
   </div>
 </template>

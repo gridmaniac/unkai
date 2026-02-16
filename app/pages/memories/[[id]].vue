@@ -35,6 +35,12 @@ const setDate = () => {
   save();
 };
 
+const setCategory = (category: string | null) => {
+  if (!activeMemory.value) return;
+  activeMemory.value.category = category;
+  save();
+};
+
 const save = async () => {
   if (!memory.value || !activeMemory.value) return;
   if (!activeMemory.value.title || !activeMemory.value.text) return;
@@ -42,7 +48,8 @@ const save = async () => {
     memory.value.title === activeMemory.value.title &&
     memory.value.text === activeMemory.value.text &&
     memory.value.dateFrom === activeMemory.value.dateFrom &&
-    memory.value.dateTo === activeMemory.value.dateTo
+    memory.value.dateTo === activeMemory.value.dateTo &&
+    memory.value.category === activeMemory.value.category
   )
     return;
 
@@ -162,12 +169,19 @@ onMounted(() => {
       </div>
 
       <div v-if="activeMemory && !isLoading" class="flex items-center gap-4">
-        <input
-          v-model="activeMemory.title"
-          type="text"
-          class="input input-ghost input-xl w-full flex-1"
-          @blur="save"
-        />
+        <label class="input input-ghost input-xl w-full flex-1">
+          <input
+            v-model="activeMemory.title"
+            type="text"
+            class="grow"
+            @blur="save"
+          />
+          <span
+            v-if="activeMemory.category === 'project'"
+            class="badge badge-neutral badge-sm"
+            >P</span
+          >
+        </label>
 
         <div class="inline-grid *:[grid-area:1/1]">
           <div
@@ -183,7 +197,22 @@ onMounted(() => {
           />
         </div>
 
-        <Menu />
+        <Menu>
+          <li
+            v-if="activeMemory.category !== 'project'"
+            onclick="document.activeElement.blur()"
+            @click="setCategory('project')"
+          >
+            <a>Mark as project</a>
+          </li>
+          <li
+            v-else
+            onclick="document.activeElement.blur()"
+            @click="setCategory(null)"
+          >
+            <a>Unmark as project</a>
+          </li>
+        </Menu>
       </div>
 
       <div v-if="activeMemory && !isLoading" class="flex gap-2">

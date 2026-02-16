@@ -22,6 +22,7 @@ export default defineEventHandler(async () => {
         memoryId: memory._id,
         dateFrom: memory.dateFrom.valueOf(),
         dateTo: memory.dateTo?.valueOf() || 0,
+        category: memory.category || "memory",
       });
     });
     return acc;

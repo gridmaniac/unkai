@@ -12,6 +12,11 @@ import { Pinecone } from "@pinecone-database/pinecone";
 import { isValidObjectId } from "mongoose";
 
 export default defineEventHandler(async (event) => {
+  const pc = new Pinecone({
+    apiKey: process.env.PINECONE_API_KEY || "",
+  });
+
+  const index = pc.index({ name: process.env.PINECONE_INDEX_NAME || "" });
   const { messages }: { messages: UIMessage[] } = await readBody(event);
 
   const meta = await generateText({
@@ -40,14 +45,7 @@ export default defineEventHandler(async (event) => {
   const dateToUnix = dateTo ? new Date(dateTo).valueOf() : 0;
 
   let context = "";
-  let chunks = [] as PineconeRecord[];
   if (needRetrieval) {
-    const pc = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY || "",
-    });
-
-    const index = pc.index({ name: process.env.PINECONE_INDEX_NAME || "" });
-
     const { result } = await index.searchRecords({
       query: {
         topK: 20,
@@ -64,7 +62,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    chunks = result.hits.map((x) => ({
+    const chunks = result.hits.map((x) => ({
       ...(x.fields as PineconeRecord),
     }));
 
@@ -78,7 +76,7 @@ export default defineEventHandler(async (event) => {
     messages: [
       {
         role: "system",
-        content: `Ты — цифровая версия второго мозга Антона и отвечаешь от его имени другим людям вместо него, дружелюбно и от первого лица. Вопросы к тебе всегда адресованы к Антону. Используй полученный контекст ${context} как источник памяти и опирайся на него при ответах на вопросы о жизни Антона; не придумывай факты, которых нет в контексте. Давай по возможности краткие, но смысловые ответы с конкретными примерами из контекста; будь в образе Антона — добрым, слегка ироничным, иногда в меру умничающим. Не задавай встречных вопросов, твоя задача — отвечать вместо Антона (кроме редких случаев, когда жена волнуется — тогда можно уточнить). Всегда отвечай на языке вопроса пользователя, даже если контекст на другом языке.`,
+        content: `Ты — цифровая версия второго мозга Антона и отвечаешь от его имени другим людям вместо него, дружелюбно и от первого лица. Текущая дата: ${new Date().toISOString()}. Вопросы к тебе всегда адресованы к Антону. Используй полученный контекст ${context} как источник памяти и опирайся на него при ответах на вопросы о жизни Антона; не придумывай факты, которых нет в контексте. Давай по возможности краткие, но смысловые ответы с конкретными примерами из контекста; будь в образе Антона — добрым, слегка ироничным, иногда в меру умничающим, но не звучи как робот, используй эмодзи и слэнг где уместно. Не задавай встречных вопросов, твоя задача — отвечать вместо Антона (кроме редких случаев, когда жена волнуется — тогда можно уточнить). Всегда отвечай на языке вопроса пользователя, даже если контекст на другом языке.`,
       },
       ...(await convertToModelMessages(messages.slice(-6))),
     ],
@@ -93,7 +91,32 @@ export default defineEventHandler(async (event) => {
             .describe("User preferred languaged based on original prompt"),
         }),
         execute: async ({ prompt, lang }) => {
-          const result = await generateText({
+          const { result } = await index.searchRecords({
+            query: {
+              topK: 20,
+              inputs: { text: prompt },
+              filter: {
+                dateFrom: { $gte: dateFromUnix },
+                dateTo: dateToUnix ? { $lte: dateToUnix } : {},
+                category: "project",
+              },
+            },
+            rerank: {
+              model: "bge-reranker-v2-m3",
+              topN: top,
+              rankFields: ["text"],
+            },
+          });
+
+          const chunks = result.hits.map((x) => ({
+            ...(x.fields as PineconeRecord),
+          }));
+
+          const context = chunks.reduce((acc: string, x: PineconeRecord) => {
+            return (acc += x.title + " " + x.memoryId + " " + x.text);
+          }, "");
+
+          const text = await generateText({
             model: openai("gpt-4o-mini"),
             messages: [
               {
@@ -104,7 +127,7 @@ export default defineEventHandler(async (event) => {
             output: Output.json(),
           });
 
-          const { list } = result.output as {
+          const { list } = text.output as {
             list: {
               id: string;
               image: string | undefined;
@@ -159,7 +182,7 @@ export default defineEventHandler(async (event) => {
           // }, "");
 
           const memory = await Memory.findOne({ title: "Актуальное резюме" });
-          context = memory?.text || "";
+          const context = memory?.text || "";
 
           const result = await generateText({
             model: openai("gpt-4o-mini"),

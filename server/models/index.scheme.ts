@@ -8,4 +8,5 @@ export const Memory = defineMongooseModel<Memory>("Memory", {
   images: { type: [String], default: [] },
   chunks: { type: [String], default: [] },
   requiresSync: { type: Boolean, default: false },
+  category: { type: String, default: null },
 });

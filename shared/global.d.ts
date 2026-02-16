@@ -7,6 +7,7 @@ interface Memory {
   images: string[];
   chunks: string[];
   requiresSync: boolean;
+  category: string | null;
 }
 
 interface Chunk {
@@ -18,6 +19,7 @@ interface PineconeRecord {
   text: string;
   memoryId: string;
   dateFrom: Date;
+  category: string;
 }
 
 interface Stats {
