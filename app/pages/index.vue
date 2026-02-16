@@ -35,7 +35,7 @@ const giveMore = (title: string) => {
 };
 
 const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText((window.location.hostname += `?m=${text}`));
+  navigator.clipboard.writeText(window.location.hostname + `?m=${text}`);
 };
 
 let timeout: NodeJS.Timeout;
