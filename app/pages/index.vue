@@ -35,7 +35,9 @@ const giveMore = (title: string) => {
 };
 
 const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText(window.location.hostname + `?m=${text}`);
+  navigator.clipboard.writeText(
+    "https://" + window.location.hostname + `?m=${text}`,
+  );
 };
 
 let timeout: NodeJS.Timeout;
@@ -121,7 +123,12 @@ onMounted(() => {
 
 <template>
   <div class="absolute inset-0 flex items-center justify-center">
-    <div class="flex max-h-full w-full max-w-3xl flex-col p-5">
+    <div
+      class="flex max-h-full w-full max-w-3xl flex-col p-5"
+      :class="{
+        'h-screen sm:h-auto': chat.messages.length > 0,
+      }"
+    >
       <div
         ref="container"
         class="flex-1 overflow-x-hidden overflow-y-auto sm:max-h-[50dvh]"
